@@ -1,0 +1,682 @@
+{
+    "name": "AWS-SNS",
+    "type": "executer",
+    "imgUrl": "logo.png",
+    "execProgram": "node",
+    "main": "app.js",
+    "version": "1.0.0",
+    "description": "Kaholo plugin for integration with AWS SNS API.",
+    "settings":[
+      {
+        "name": "accessKeyId",
+        "viewName": "Access Key ID",
+        "type": "vault",
+        "description": "The default AWS Access Key ID to use for authentication.",
+        "placeholder": "AKIAIOSFODNN7EXAMPLE",
+        "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+      },
+      {
+        "name": "accessKeySecret",
+        "viewName": "Access Key Secret",
+        "type": "vault",
+        "description": "The default AWS Access Key secret to use for authentication.",
+        "placeholder": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+        "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+      },
+      {
+        "name": "region",
+        "viewName": "Region",
+        "type": "string",
+        "description": "The ID of the default region to make requests on.",
+        "placeholder": "us-east-2",
+        "learnUrl": "https://aws.amazon.com/about-aws/global-infrastructure/regions_az/"
+      }
+    ],
+    "methods": [
+      {
+        "name": "createTopic",
+        "viewName": "Create Topic",
+        "params": [
+          {
+            "name": "accessKeyId",
+            "viewName": "Access Key ID",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "AKIAIOSFODNN7EXAMPLE",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "accessKeySecret",
+            "viewName": "Access Key Secret",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "region",
+            "viewName": "Region",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listRegionsAuto",
+            "description": "Make the request in the specified region.",
+            "placeholder": "us-east-2",
+            "learnUrl": "https://aws.amazon.com/about-aws/global-infrastructure/regions_az/"
+          },
+          {
+            "name": "name",
+            "viewName": "Name",
+            "type": "string",
+            "description": "The name of the topic to create.",
+            "placeholder": "MyTopic",
+            "learnUrl": "https://docs.aws.amazon.com/sns/latest/dg/sns-create-topic.html"
+          },
+          {
+            "name": "displayName",
+            "viewName": "Display Name",
+            "type": "string",
+            "description": "The display name to use for a topic with SMS subscriptions.",
+            "placeholder": "My Topic",
+            "learnUrl": "https://docs.aws.amazon.com/sns/latest/dg/sns-create-topic.html"
+          },
+          {
+            "name": "type",
+            "viewName": "Type",
+            "type": "options",
+            "description": "The type of topic to create. Possible values are: Standard, FIFO.",
+            "placeholder": "Standard",
+            "learnUrl": "https://docs.aws.amazon.com/sns/latest/dg/sns-create-topic.html",
+            "options": [
+                {
+                    "id": "Standard",
+                    "name": "Standard"
+                },
+                {
+                    "id": "FIFO",
+                    "name": "FIFO"
+                }
+            ]
+          },
+          {
+            "name": "contentBasedDeduplication",
+            "viewName": "Enable Content-based Message Deduplication",
+            "type": "boolean",
+            "description": "For FIFO topics only. If true, enable default message deduplication based on message content. If unchecked, a deduplication ID must be provided for every publish request.",
+            "learnUrl": "https://docs.aws.amazon.com/sns/latest/dg/sns-create-topic.html"
+          },
+          {
+            "name": "kmsMasterKeyId",
+            "viewName": "Encryption Master KMS Key ID",
+            "type": "string",
+            "description": "If specified, enable encryption and use the specified key. Otherwise disable encryption.",
+            "placeholder": "1234abcd-12ab-34cd-56ef-1234567890ab",
+            "learnUrl": "https://docs.aws.amazon.com/sns/latest/dg/sns-create-topic.html"
+          },
+          {
+            "name": "accessPolicyJson",
+            "viewName": "Access Policy JSON",
+            "type": "text",
+            "description": "If specified, set the access policy of the new Topic according to the provided JSON. Can provide the local path of a JSON file on your agent, or pass JS object from code.",
+            "placeholder": "/home/user/accessPolicy.json",
+            "learnUrl": "https://docs.aws.amazon.com/sns/latest/dg/sns-authentication-and-access-control.html"
+          },
+          {
+            "name": "deliveryRetryPolicyJson",
+            "viewName": "Delivery Retry Policy JSON",
+            "type": "text",
+            "description": "If specified, set the delivery retry policy of the new Topic according to the provided JSON. Can provide the local path of a JSON file on your agent, or pass JS object from code.",
+            "placeholder": "/home/user/deliveryRetryPolicy.json",
+            "learnUrl": "https://docs.aws.amazon.com/sns/latest/dg/sns-message-delivery-retries.html"
+          },
+          {
+            "name": "statusLoggingProtocols",
+            "viewName": "Delivery Status Logging Protocols",
+            "type": "options",
+            "description": "Enable delivery status logging for the specified protocol(s). If provided must also provide 'Success Sample Rate'. Can provide multiple values as an array from code.",
+            "placeholder": "HTTP/S",
+            "learnUrl": "https://docs.aws.amazon.com/sns/latest/dg/sns-topic-attributes.html",
+            "options": [
+                {
+                    "id": "None",
+                    "name": "None"
+                },
+                {
+                    "id": "AWS Lambda",
+                    "name": "AWS Lambda"
+                },
+                {
+                    "id": "Amazon SQS",
+                    "name": "Amazon SQS"
+                },
+                {
+                    "id": "HTTP/S",
+                    "name": "HTTP/S"
+                },
+                {
+                    "id": "Platform application endpoint",
+                    "name": "Platform application endpoint"
+                },
+                {
+                    "id": "Amazon Kinesis Data Firehose",
+                    "name": "Amazon Kinesis Data Firehose"
+                }
+            ]
+          },
+          {
+            "name": "successSampleRate",
+            "viewName": "Success Sample Rate",
+            "type": "string",
+            "description": "Required when enabling delivery status logging. The percentage of successful message deliveries to log. Possible values are 1-100.",
+            "placeholder": "100",
+            "learnUrl": "https://docs.aws.amazon.com/sns/latest/dg/sns-topic-attributes.html"
+          },
+          {
+            "name": "successFeedbackRoleArn",
+            "viewName": "Successful Delivery Role ARN",
+            "type": "string",
+            "description": "ARN of an IAM role to use on successful deliveries.",
+            "placeholder": "arn:aws:iam::123401149387:role/service-role/aws-example-role",
+            "learnUrl": "https://docs.aws.amazon.com/sns/latest/dg/sns-topic-attributes.html"
+          },
+          {
+            "name": "failureFeedbackRoleArn",
+            "viewName": "Failed Delivery Role ARN",
+            "type": "string",
+            "description": "ARN of an IAM role to use on failed deliveries.",
+            "placeholder": "arn:aws:iam::123401149387:role/service-role/aws-example-role",
+            "learnUrl": "https://docs.aws.amazon.com/sns/latest/dg/sns-topic-attributes.html"
+          }
+        ]
+      },
+      {
+        "name": "subscribe",
+        "viewName": "Subscribe",
+        "params": [
+          {
+            "name": "accessKeyId",
+            "viewName": "Access Key ID",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "AKIAIOSFODNN7EXAMPLE",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "accessKeySecret",
+            "viewName": "Access Key Secret",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "region",
+            "viewName": "Region",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listRegionsAuto",
+            "description": "Make the request in the specified region.",
+            "placeholder": "us-east-2",
+            "learnUrl": "https://aws.amazon.com/about-aws/global-infrastructure/regions_az/"
+          },
+          {
+            "name": "topic",
+            "viewName": "Topic",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listTopicsAuto",
+            "description": "The topic to subscribe to.",
+            "placeholder": "MyTopic",
+            "learnUrl": "https://docs.aws.amazon.com/sns/latest/dg/sns-create-subscribe-endpoint-to-topic.html"
+          },
+          {
+            "name": "protocol",
+            "viewName": "Protocol",
+            "type": "options",
+            "description": "The protocol to use to send messages in this subscription.",
+            "placeholder": "HTTP",
+            "learnUrl": "https://docs.aws.amazon.com/sns/latest/dg/sns-create-subscribe-endpoint-to-topic.html",
+            "options": [
+                {
+                    "id": "http",
+                    "name": "HTTP"
+                },
+                {
+                    "id": "https",
+                    "name": "HTTPS"
+                },
+                {
+                    "id": "email",
+                    "name": "Email"
+                },
+                {
+                    "id": "email-json",
+                    "name": "Email JSON"
+                },
+                {
+                    "id": "sms",
+                    "name": "SMS"
+                },
+                {
+                    "id": "sqs",
+                    "name": "SQS"
+                },
+                {
+                    "id": "application",
+                    "name": "Application"
+                },
+                {
+                    "id": "lambda",
+                    "name": "Lambda"
+                },
+                {
+                    "id": "firehose",
+                    "name": "Firehose"
+                }
+            ]
+          },
+          {
+            "name": "endpoint",
+            "viewName": "Endpoint",
+            "type": "string",
+            "description": "The endpoint that you want to receive notifications. Endpoints format vary by protocol.",
+            "placeholder": "My Topic",
+            "learnUrl": "http://example.com/webhook"
+          }
+        ]
+      },
+      {
+        "name": "confirmSubscription",
+        "viewName": "Confirm Subscription",
+        "params": [
+          {
+            "name": "accessKeyId",
+            "viewName": "Access Key ID",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "AKIAIOSFODNN7EXAMPLE",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "accessKeySecret",
+            "viewName": "Access Key Secret",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "region",
+            "viewName": "Region",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listRegionsAuto",
+            "description": "Make the request in the specified region.",
+            "placeholder": "us-east-2",
+            "learnUrl": "https://aws.amazon.com/about-aws/global-infrastructure/regions_az/"
+          },
+          {
+            "name": "topic",
+            "viewName": "Topic",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listTopicsAuto",
+            "description": "The topic of the subscription.",
+            "placeholder": "MyTopic"
+          },
+          {
+            "name": "token",
+            "viewName": "Token",
+            "type": "string",
+            "description": "Short-lived token sent to an endpoint during the Subscribe action.",
+            "placeholder": "123456ab"
+          }
+        ]
+      },
+      {
+        "name": "publishToTopic",
+        "viewName": "Publish To Topic",
+        "params": [
+          {
+            "name": "accessKeyId",
+            "viewName": "Access Key ID",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "AKIAIOSFODNN7EXAMPLE",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "accessKeySecret",
+            "viewName": "Access Key Secret",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "region",
+            "viewName": "Region",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listRegionsAuto",
+            "description": "Make the request in the specified region.",
+            "placeholder": "us-east-2",
+            "learnUrl": "https://aws.amazon.com/about-aws/global-infrastructure/regions_az/"
+          },
+          {
+            "name": "topic",
+            "viewName": "Topic",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listTopicsAuto",
+            "description": "The topic to subscribe to.",
+            "placeholder": "MyTopic",
+            "learnUrl": "https://docs.aws.amazon.com/sns/latest/api/API_Publish.html"
+          },
+          {
+            "name": "message",
+            "viewName": "Message",
+            "type": "text",
+            "description": "The message you want to send. Also accepts an object from code to use as the message, for sending different messages to different transport protocols.",
+            "placeholder": "This is am example message...",
+            "learnUrl": "https://docs.aws.amazon.com/sns/latest/api/API_Publish.html"
+          },
+          {
+            "name": "subject",
+            "viewName": "Subject",
+            "type": "string",
+            "description": "Optional parameter to be used as the \"Subject\" line when the message is delivered to email endpoints.",
+            "placeholder": "Example Subject",
+            "learnUrl": "https://docs.aws.amazon.com/sns/latest/api/API_Publish.html"
+          },
+          {
+            "name": "messageDeduplicationId",
+            "viewName": "Message Deduplication ID",
+            "type": "string",
+            "description": "This parameter applies only to FIFO topics. Every message must have a unique Message Deduplication ID. Can contain up to 128 alphanumeric characters (a-z, A-Z, 0-9) and punctuation (!\"#$%&'()*+,-./:;<=>?@[]^_{|}~).",
+            "placeholder": "msg_1",
+            "learnUrl": "https://docs.aws.amazon.com/sns/latest/api/API_Publish.html"
+          },
+          {
+            "name": "messageGroupId",
+            "viewName": "Message Group ID",
+            "type": "string",
+            "description": "This parameter applies only to FIFO topics. The Message Group ID is a tag that specifies that a message belongs to a specific message group. Can contain up to 128 alphanumeric characters (a-z, A-Z, 0-9) and punctuation (!\"#$%&'()*+,-./:;<=>?@[]^_{|}~).",
+            "placeholder": "group_1",
+            "learnUrl": "https://docs.aws.amazon.com/sns/latest/api/API_Publish.html"
+          }
+        ]
+      },
+      {
+        "name": "deleteTopic",
+        "viewName": "Delete Topic",
+        "params": [
+          {
+            "name": "accessKeyId",
+            "viewName": "Access Key ID",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "AKIAIOSFODNN7EXAMPLE",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "accessKeySecret",
+            "viewName": "Access Key Secret",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "region",
+            "viewName": "Region",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listRegionsAuto",
+            "description": "Make the request in the specified region.",
+            "placeholder": "us-east-2",
+            "learnUrl": "https://aws.amazon.com/about-aws/global-infrastructure/regions_az/"
+          },
+          {
+            "name": "topic",
+            "viewName": "Topic",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listTopicsAuto",
+            "description": "The topic to delete.",
+            "placeholder": "MyTopic"
+          }
+        ]
+      },
+      {
+        "name": "unsubscribe",
+        "viewName": "Unsubscribe",
+        "params": [
+          {
+            "name": "accessKeyId",
+            "viewName": "Access Key ID",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "AKIAIOSFODNN7EXAMPLE",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "accessKeySecret",
+            "viewName": "Access Key Secret",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "region",
+            "viewName": "Region",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listRegionsAuto",
+            "description": "Make the request in the specified region.",
+            "placeholder": "us-east-2",
+            "learnUrl": "https://aws.amazon.com/about-aws/global-infrastructure/regions_az/"
+          },
+          {
+            "name": "topic",
+            "viewName": "Topic",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listTopicsAuto",
+            "description": "The topic of the subscription.",
+            "placeholder": "MyTopic"
+          },
+          {
+            "name": "subscriptionArn",
+            "viewName": "Subscription ARN",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listSubscriptionsAuto",
+            "description": "The subscrition to remove.",
+            "placeholder": "arn:aws:sns:us-west-2:123456789012:MyTopic:6b0e71bd-7e97-4d97-80ce-4a0994e55286"
+          }
+        ]
+      },
+      {
+        "name": "describeTopic",
+        "viewName": "Describe Topic",
+        "params": [
+          {
+            "name": "accessKeyId",
+            "viewName": "Access Key ID",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "AKIAIOSFODNN7EXAMPLE",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "accessKeySecret",
+            "viewName": "Access Key Secret",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "region",
+            "viewName": "Region",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listRegionsAuto",
+            "description": "Make the request in the specified region.",
+            "placeholder": "us-east-2",
+            "learnUrl": "https://aws.amazon.com/about-aws/global-infrastructure/regions_az/"
+          },
+          {
+            "name": "topic",
+            "viewName": "Topic",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listTopicsAuto",
+            "description": "The topic to describe.",
+            "placeholder": "MyTopic"
+          }
+        ]
+      },
+      {
+        "name": "describeSubscription",
+        "viewName": "Describe Subscription",
+        "params": [
+          {
+            "name": "accessKeyId",
+            "viewName": "Access Key ID",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "AKIAIOSFODNN7EXAMPLE",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "accessKeySecret",
+            "viewName": "Access Key Secret",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "region",
+            "viewName": "Region",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listRegionsAuto",
+            "description": "Make the request in the specified region.",
+            "placeholder": "us-east-2",
+            "learnUrl": "https://aws.amazon.com/about-aws/global-infrastructure/regions_az/"
+          },
+          {
+            "name": "topic",
+            "viewName": "Topic",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listTopicsAuto",
+            "description": "The topic of the subscription.",
+            "placeholder": "MyTopic"
+          },
+          {
+            "name": "subscriptionArn",
+            "viewName": "Subscription ARN",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listSubscriptionsAuto",
+            "description": "The subscrition to describe.",
+            "placeholder": "arn:aws:sns:us-west-2:123456789012:MyTopic:6b0e71bd-7e97-4d97-80ce-4a0994e55286"
+          }
+        ]
+      },
+      {
+        "name": "listTopics",
+        "viewName": "List Topics",
+        "params": [
+          {
+            "name": "accessKeyId",
+            "viewName": "Access Key ID",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "AKIAIOSFODNN7EXAMPLE",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "accessKeySecret",
+            "viewName": "Access Key Secret",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "region",
+            "viewName": "Region",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listRegionsAuto",
+            "description": "Make the request in the specified region.",
+            "placeholder": "us-east-2",
+            "learnUrl": "https://aws.amazon.com/about-aws/global-infrastructure/regions_az/"
+          },
+          {
+            "name": "nextToken",
+            "viewName": "Next Token",
+            "type": "string",
+            "description": "Pass to retrieve topics from last left. This element is returned if there are more subscriptions to retrieve.",
+            "placeholder": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          }
+        ]
+      },
+      {
+        "name": "listSubscriptions",
+        "viewName": "List Subscriptions",
+        "params": [
+          {
+            "name": "accessKeyId",
+            "viewName": "Access Key ID",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "AKIAIOSFODNN7EXAMPLE",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "accessKeySecret",
+            "viewName": "Access Key Secret",
+            "type": "vault",
+            "description": "This is a parameter taken from the vault to access AWS",
+            "placeholder": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          },
+          {
+            "name": "region",
+            "viewName": "Region",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listRegionsAuto",
+            "description": "Make the request in the specified region.",
+            "placeholder": "us-east-2",
+            "learnUrl": "https://aws.amazon.com/about-aws/global-infrastructure/regions_az/"
+          },
+          {
+            "name": "topic",
+            "viewName": "Topic",
+            "type": "autocomplete",
+            "autocompleteType": "function",
+            "functionName": "listTopicsAuto",
+            "description": "If specified, list only subscriptions of the specified topic.",
+            "placeholder": "MyTopic"
+          },
+          {
+            "name": "nextToken",
+            "viewName": "Next Token",
+            "type": "string",
+            "description": "Pass to retrieve topics from last left. This element is returned if there are more subscriptions to retrieve.",
+            "placeholder": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+            "learnUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey"
+          }
+        ]
+      }
+    ]
+  }
+  
