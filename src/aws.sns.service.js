@@ -51,7 +51,7 @@ module.exports = class snsService{
     }
     
     async subscribe({topic, protocol, endpoint}){
-        if (!topic || !protocol) {
+        if (!topic || !protocol || !endpoint) {
             throw "Didn't provide one of the required parameters."
         }
         return this.sns.subscribe({
