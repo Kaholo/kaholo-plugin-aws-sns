@@ -2,7 +2,7 @@ const parsers = require("./parsers");
 
 const snsService = require('./aws.sns.service');
 async function createTopic(action, settings){
-    const { name, displayName, type, contentBasedDeduplication, kmsMasterKeyId, kmsMasterKeyId, accessPolicyJson, 
+    const { name, displayName, type, contentBasedDeduplication, kmsMasterKeyId, accessPolicyJson, 
         statusLoggingProtocols, deliveryRetryPolicyJson, successSampleRate, successFeedbackRoleArn, failureFeedbackRoleArn } = action.params;
     const client = snsService.from(action.params, settings);
     return client.createTopic({
@@ -12,8 +12,8 @@ async function createTopic(action, settings){
         contentBasedDeduplication: parsers.boolean(contentBasedDeduplication),
         kmsMasterKeyId: parsers.string(kmsMasterKeyId),
         accessPolicyJson: parsers.jsonString(accessPolicyJson),
-        statusLoggingProtocols: parsers.array(statusLoggingProtocols),
         deliveryRetryPolicyJson: parsers.jsonString(deliveryRetryPolicyJson),
+        statusLoggingProtocols: parsers.array(statusLoggingProtocols),
         successSampleRate: parsers.string(successSampleRate),
         successFeedbackRoleArn: parsers.string(successFeedbackRoleArn),
         failureFeedbackRoleArn: parsers.string(failureFeedbackRoleArn)

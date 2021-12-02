@@ -29,9 +29,9 @@ Create a new topic.
 [Learn More](https://docs.aws.amazon.com/sns/latest/dg/sns-create-topic.html)
 8. Encryption Master KMS Key ID (String) **Optional** - If specified, enable encryption and use the specified key. Otherwise disable encryption.
 [Learn More](https://docs.aws.amazon.com/sns/latest/dg/sns-create-topic.html)
-9. Access Policy JSON (Text) **Optional** - If specified, set the access policy of the new Topic according to the provided JSON. Can provide the local path of a JSON file on your agent, or pass JS object from code.
+9. Access Policy JSON (Text) **Optional** - If specified, set the access policy of the new Topic according to the provided JSON.  Can provide as a JSON string or as an object from code.
 [Learn More](https://docs.aws.amazon.com/sns/latest/dg/sns-authentication-and-access-control.html)
-10. Delivery Retry Policy JSON (Text) **Optional** - If specified, set the delivery retry policy of the new Topic according to the provided JSON. Can provide the local path of a JSON file on your agent, or pass JS object from code.
+10. HTTP/S Delivery Retry Policy JSON (Text) **Optional** - Only for standard topic type. If specified, set the http/s delivery retry policy of the new Topic according to the provided JSON.  Can provide as a JSON string or as an object from code.
 [Learn More](https://docs.aws.amazon.com/sns/latest/dg/sns-message-delivery-retries.html)
 11. Delivery Status Logging Protocols (Options) **Optional** - Enable delivery status logging for the specified protocol(s). If provided must also provide 'Success Sample Rate'. Can provide multiple values as an array from code.Possible values: **None | AWS Lambda | Amazon SQS | HTTP/S | Platform application endpoint | Amazon Kinesis Data Firehose**
 [Learn More](https://docs.aws.amazon.com/sns/latest/dg/sns-topic-attributes.html)

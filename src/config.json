@@ -116,16 +116,16 @@
             "name": "accessPolicyJson",
             "viewName": "Access Policy JSON",
             "type": "text",
-            "description": "If specified, set the access policy of the new Topic according to the provided JSON. Can provide the local path of a JSON file on your agent, or pass JS object from code.",
-            "placeholder": "/home/user/accessPolicy.json",
+            "description": "If specified, set the access policy of the new Topic according to the provided JSON. Can provide as a JSON string or as an object from code.",
+            "placeholder": "{ \n \"Version\": \"2008-10-17\", \n \"Id\": \"__default_policy_ID\", \n \"Statement\": [ \n  { \n   \"Sid\": \"__default_statement_ID\", \n   \"Effect\": \"Allow\", \n   \"Principal\": { \n    \"AWS\": \"*\" \n   }, \n   \"Action\": [ \n    \"SNS:Publish\", \n    \"SNS:RemovePermission\", \n    \"SNS:SetTopicAttributes\", \n    \"SNS:DeleteTopic\", \n    \"SNS:ListSubscriptionsByTopic\", \n    \"SNS:GetTopicAttributes\", \n    \"SNS:AddPermission\", \n    \"SNS:Subscribe\" \n   ], \n   \"Resource\": \"\", \n   \"Condition\": { \n    \"StringEquals\": { \n     \"AWS:SourceOwner\": \"422901149387\" \n    } \n   } \n  } \n ] \n}",
             "learnUrl": "https://docs.aws.amazon.com/sns/latest/dg/sns-authentication-and-access-control.html"
           },
           {
             "name": "deliveryRetryPolicyJson",
-            "viewName": "Delivery Retry Policy JSON",
+            "viewName": "HTTP/S Delivery Retry Policy JSON",
             "type": "text",
-            "description": "If specified, set the delivery retry policy of the new Topic according to the provided JSON. Can provide the local path of a JSON file on your agent, or pass JS object from code.",
-            "placeholder": "/home/user/deliveryRetryPolicy.json",
+            "description": "Only for standard topic type. If specified, set the delivery retry policy of the new Topic according to the provided JSON.  Can provide as a JSON string or as an object from code.",
+            "placeholder": "{\n \"http\": {\n  \"defaultHealthyRetryPolicy\": {\n  \"numRetries\": 3,\n  \"numNoDelayRetries\": 0,\n  \"minDelayTarget\": 20,\n  \"maxDelayTarget\": 20,\n  \"numMinDelayRetries\": 0,\n  \"numMaxDelayRetries\": 0,\n  \"backoffFunction\": \"linear\"\n  },\n  \"disableSubscriptionOverrides\": false\n }\n }",
             "learnUrl": "https://docs.aws.amazon.com/sns/latest/dg/sns-message-delivery-retries.html"
           },
           {
@@ -328,7 +328,7 @@
             "viewName": "Token",
             "type": "string",
             "description": "Short-lived token sent to an endpoint during the Subscribe action.",
-            "placeholder": "123456ab"
+            "placeholder": "1234412f37fb687f5d51e6e2425e90cda45a6e6ddf0638f7ef06c16d8e252dbf3d5f57e0ebd7e484b58a931306219aedbe74395376709d5b5c5202bb2dd912d328cdc999453278c4fe197acde9b8777682afd5a3b7db0f66a664a1841308a649e8eabd5389b25b24c5bcb5c568ec0794"
           }
         ]
       },

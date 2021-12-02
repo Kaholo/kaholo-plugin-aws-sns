@@ -1,5 +1,6 @@
 const parsers = require("./parsers");
 const AWS = require("aws-sdk");
+const { removeUndefinedAndEmpty } = require("./helpers");
 
 module.exports = class snsService{
     constructor({accessKeyId, secretAccessKey, region}){
@@ -11,7 +12,7 @@ module.exports = class snsService{
     static from(params, settings){
         return new snsService({
             accessKeyId: parsers.string(params.accessKeyId || settings.accessKeyId)/* Change to correct parser */,
-            accessKeySecret: parsers.string(params.accessKeySecret || settings.accessKeySecret)/* Change to correct parser */,
+            secretAccessKey: parsers.string(params.accessKeySecret || settings.accessKeySecret)/* Change to correct parser */,
             region: parsers.string(params.region || settings.region)/* Change to correct parser */
         });
     }
@@ -20,18 +21,18 @@ module.exports = class snsService{
                         statusLoggingProtocols, successSampleRate, successFeedbackRoleArn, failureFeedbackRoleArn}){
         if (!name) throw "Must provide a name for the topic!";
         if (statusLoggingProtocols.includes("None")) statusLoggingProtocols = [];
-        if (statusLoggingProtocols && !successSampleRate){
+        if (statusLoggingProtocols.length && !successSampleRate){
             throw "Must provide Success Sample Rate when enabling Status Logging."
         }
         const params = {
             Name: name,
             Attributes: {
                 DisplayName: displayName,
-                FifoTopic: type === "FIFO",
+                FifoTopic: type === "FIFO" ? "true" : undefined,
                 Policy: accessPolicyJson,
                 DeliveryPolicy: deliveryRetryPolicyJson,
                 KmsMasterKeyId: kmsMasterKeyId,
-                ContentBasedDeduplication: contentBasedDeduplication
+                ContentBasedDeduplication: contentBasedDeduplication ? "true" : undefined,
             }
         }
         if (statusLoggingProtocols.length){
@@ -51,7 +52,7 @@ module.exports = class snsService{
     }
     
     async subscribe({topic, protocol, endpoint}){
-        if (!topic || !protocol || !endpoint) {
+        if (!topic || !protocol) {
             throw "Didn't provide one of the required parameters."
         }
         return this.sns.subscribe({

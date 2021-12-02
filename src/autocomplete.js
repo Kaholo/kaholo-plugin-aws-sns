@@ -64,8 +64,16 @@ function listAuto(listFuncName, outputName, {fields = [], parseFunc}) {
   }
 }
 
+function getParseArn(typeName){
+  const regex = new RegExp(`:${typeName}:(.+)$`, "g");
+  return (arn) => {
+    const matches = [...(arn.matchAll(regex))];
+    return getAutoResult(arn, matches[0][1] || arn)
+  }
+}
+
 module.exports = {
   listRegionsAuto: listAuto("listRegions", "Regions", {fields: ["RegionName"]}),
-  listTopicsAuto: listAuto("listTopics", "Subscriptions", ["SubscriptionArn"]),
-  listSubscriptionsAuto: listAuto("listSubscriptions", "Topics", ["TopicArn"])
+  listTopicsAuto: listAuto("listTopics", "Topics", {parseFunc: topic => getParseArn("[0-9]+")(topic.TopicArn)}),
+  listSubscriptionsAuto: listAuto("listSubscriptions", "Subscriptions", {fields: ["SubscriptionArn"]})
 }
