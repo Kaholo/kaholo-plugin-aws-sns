@@ -4,9 +4,22 @@
   "imgUrl": "logo.png",
   "execProgram": "node",
   "main": "app.js",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "category": "NOTIFICATIONS",
-  "keywords": ["aws", "amazon", "code", "cloud", "cluster", "vm", "cli", "instance", "service", "deployment", "notifications", "service"],
+  "keywords": [
+    "aws",
+    "amazon",
+    "code",
+    "cloud",
+    "cluster",
+    "vm",
+    "cli",
+    "instance",
+    "service",
+    "deployment",
+    "notifications",
+    "service"
+  ],
   "description": "Kaholo plugin for integration with AWS SNS API.",
   "settings": [
     {
