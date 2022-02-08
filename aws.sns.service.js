@@ -7,6 +7,7 @@ module.exports = class snsService{
         if (!accessKeyId || !secretAccessKey || !region) throw "Didn't provide access key or region!";
         this.creds = {accessKeyId, secretAccessKey, region};
         this.sns = new AWS.SNS(this.creds);
+        this.lightsail = new AWS.Lightsail(this.creds);
     }
 
     static from(params, settings){
@@ -16,8 +17,8 @@ module.exports = class snsService{
             region: parsers.string(params.region || settings.region)/* Change to correct parser */
         });
     }
-    
-    async createTopic({name, displayName, type, contentBasedDeduplication, kmsMasterKeyId, accessPolicyJson, deliveryRetryPolicyJson, 
+
+    async createTopic({name, displayName, type, contentBasedDeduplication, kmsMasterKeyId, accessPolicyJson, deliveryRetryPolicyJson,
                         statusLoggingProtocols, successSampleRate, successFeedbackRoleArn, failureFeedbackRoleArn}){
         if (!name) throw "Must provide a name for the topic!";
         if (statusLoggingProtocols.includes("None")) statusLoggingProtocols = [];
@@ -36,11 +37,11 @@ module.exports = class snsService{
             }
         }
         if (statusLoggingProtocols.length){
-            const paramNames = statusLoggingProtocols.map(protocol => 
-                protocol === "AWS Lambda" ? "Lambda" : 
-                protocol === "Amazon SQS" ? "SQS" : 
-                protocol === "HTTP/S" ? "HTTP" : 
-                protocol === "Amazon Kinesis Data Firehose" ? "Firehose" : 
+            const paramNames = statusLoggingProtocols.map(protocol =>
+                protocol === "AWS Lambda" ? "Lambda" :
+                protocol === "Amazon SQS" ? "SQS" :
+                protocol === "HTTP/S" ? "HTTP" :
+                protocol === "Amazon Kinesis Data Firehose" ? "Firehose" :
                              "Application");
             paramNames.forEach(paramName =>{
                 params.Attributes[paramName + "SuccessFeedbackRoleArn"] = successFeedbackRoleArn;
@@ -50,7 +51,7 @@ module.exports = class snsService{
         }
         return this.sns.createTopic(removeUndefinedAndEmpty(params)).promise();
     }
-    
+
     async subscribe({topic, protocol, endpoint}){
         if (!topic || !protocol) {
             throw "Didn't provide one of the required parameters."
@@ -62,7 +63,7 @@ module.exports = class snsService{
             ReturnSubscriptionArn: true
         }).promise();
     }
-    
+
     async confirmSubscription({topic, token}){
         if (!topic || !token) {
             throw "Didn't provide one of the required parameters."
@@ -72,21 +73,21 @@ module.exports = class snsService{
             Token: token
         }).promise();
     }
-    
+
     async publishToTopic({topic, message, subject, messageDeduplicationId, messageGroupId}){
         if (!topic || !message) {
             throw "Didn't provide one of the required parameters."
         }
         return this.sns.publish(removeUndefinedAndEmpty({
             TopicArn: topic,
-            Message: message, 
-            Subject: subject, 
+            Message: message,
+            Subject: subject,
             MessageDeduplicationId: messageDeduplicationId,
             MessageGroupId: messageGroupId,
             MessageStructure: typeof(message) === "object" ? "json" : undefined
         })).promise();
     }
-    
+
     async deleteTopic({topic}){
         if (!topic) {
             throw "Didn't provide one of the required parameters."
@@ -95,7 +96,7 @@ module.exports = class snsService{
             TopicArn: topic
         }).promise();
     }
-    
+
     async unsubscribe({subscriptionArn}){
         if (!subscriptionArn) {
             throw "Didn't provide one of the required parameters."
@@ -104,7 +105,7 @@ module.exports = class snsService{
             SubscriptionArn: subscriptionArn
         }).promise();
     }
-    
+
     async describeTopic({topic}){
         if (!topic) {
             throw "Didn't provide one of the required parameters."
@@ -113,7 +114,7 @@ module.exports = class snsService{
             TopicArn: topic
         }).promise();
     }
-    
+
     async describeSubscription({subscriptionArn}){
         if (!subscriptionArn) {
             throw "Didn't provide one of the required parameters."
@@ -122,11 +123,11 @@ module.exports = class snsService{
             SubscriptionArn: subscriptionArn
         }).promise();
     }
-    
+
     async listTopics({nextToken}){
         return this.sns.listTopics({NextToken: nextToken}).promise();
     }
-    
+
     async listSubscriptions({topic, nextToken}){
         if (topic) return this.sns.listSubscriptionsByTopic({
             TopicArn: topic,
@@ -134,7 +135,7 @@ module.exports = class snsService{
         }).promise();
         return this.sns.listTopics({NextToken: nextToken}).promise();
     }
-    
+
     async listRegions(){
         if (this.creds.region) this.creds.region = "us-east-1"
         const ec2 = new AWS.EC2(this.creds);
