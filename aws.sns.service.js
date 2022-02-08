@@ -14,7 +14,7 @@ module.exports = class snsService{
         return new snsService({
             accessKeyId: parsers.string(params.accessKeyId || settings.accessKeyId)/* Change to correct parser */,
             secretAccessKey: parsers.string(params.accessKeySecret || settings.accessKeySecret)/* Change to correct parser */,
-            region: parsers.string(params.region || settings.region)/* Change to correct parser */
+            region: parsers.string(parsers.autocomplete(params.region) || settings.region)/* Change to correct parser */
         });
     }
 
