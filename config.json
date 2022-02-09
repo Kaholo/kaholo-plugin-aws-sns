@@ -4,7 +4,7 @@
   "imgUrl": "logo.png",
   "execProgram": "node",
   "main": "app.js",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "category": "NOTIFICATIONS",
   "keywords": [
     "aws",
@@ -73,7 +73,7 @@
           "viewName": "Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "listRegionsAuto",
+          "functionName": "listRegions",
           "description": "The AWS region to make this request on.",
           "placeholder": "us-east-2",
           "learnUrl": "https://docs.aws.amazon.com/general/latest/gr/s3.html"
@@ -229,7 +229,7 @@
           "viewName": "Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "listRegionsAuto",
+          "functionName": "listRegions",
           "description": "The AWS region to make this request on.",
           "placeholder": "us-east-2",
           "learnUrl": "https://docs.aws.amazon.com/general/latest/gr/s3.html"
@@ -325,7 +325,7 @@
           "viewName": "Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "listRegionsAuto",
+          "functionName": "listRegions",
           "description": "The AWS region to make this request on.",
           "placeholder": "us-east-2",
           "learnUrl": "https://docs.aws.amazon.com/general/latest/gr/s3.html"
@@ -375,7 +375,7 @@
           "viewName": "Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "listRegionsAuto",
+          "functionName": "listRegions",
           "description": "The AWS region to make this request on.",
           "placeholder": "us-east-2",
           "learnUrl": "https://docs.aws.amazon.com/general/latest/gr/s3.html"
@@ -449,7 +449,7 @@
           "viewName": "Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "listRegionsAuto",
+          "functionName": "listRegions",
           "description": "The AWS region to make this request on.",
           "placeholder": "us-east-2",
           "learnUrl": "https://docs.aws.amazon.com/general/latest/gr/s3.html"
@@ -491,7 +491,7 @@
           "viewName": "Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "listRegionsAuto",
+          "functionName": "listRegions",
           "description": "The AWS region to make this request on.",
           "placeholder": "us-east-2",
           "learnUrl": "https://docs.aws.amazon.com/general/latest/gr/s3.html"
@@ -543,7 +543,7 @@
           "viewName": "Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "listRegionsAuto",
+          "functionName": "listRegions",
           "description": "The AWS region to make this request on.",
           "placeholder": "us-east-2",
           "learnUrl": "https://docs.aws.amazon.com/general/latest/gr/s3.html"
@@ -585,7 +585,7 @@
           "viewName": "Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "listRegionsAuto",
+          "functionName": "listRegions",
           "description": "The AWS region to make this request on.",
           "placeholder": "us-east-2",
           "learnUrl": "https://docs.aws.amazon.com/general/latest/gr/s3.html"
@@ -637,7 +637,7 @@
           "viewName": "Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "listRegionsAuto",
+          "functionName": "listRegions",
           "description": "The AWS region to make this request on.",
           "placeholder": "us-east-2",
           "learnUrl": "https://docs.aws.amazon.com/general/latest/gr/s3.html"
@@ -677,7 +677,7 @@
           "viewName": "Region",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "listRegionsAuto",
+          "functionName": "listRegions",
           "description": "The AWS region to make this request on.",
           "placeholder": "us-east-2",
           "learnUrl": "https://docs.aws.amazon.com/general/latest/gr/s3.html"
